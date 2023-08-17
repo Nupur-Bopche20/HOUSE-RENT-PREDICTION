@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head xmlns="http://www.w3.org/1999/xhtml">
+    <meta charset="UTF-8">
+    <title>House Rent Predictor</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+
+    <h1 class="wel">Welcome to House Rent Predictor</h1>
+    <p class="para">House Rent Predictor will help you to predict the price of house according to your need</p>
+    <p class="para">Please fill the following details:-</p>
+
+    <form method="post" accept-charset="#" name="Modelform" style="text-align: center">
+
+        <div class="abc" style="text-align: center">
+             <label><b>Select BHK:</b> </label><br>
+             <select class="selectpicker form-control" id="BHK" name="BHK" required="1" >
+                  <option value="bhk">Enter BHK </option>
+                {% for bhk in BHK %}
+                            <option value="{{ bhk}}">{{ bhk }}</option>
+                  {% endfor %}
+             </select>
+        </div>
+
+        <div class="abc" style="text-align: center">
+             <label><b>Select Size:</b> </label><br>
+             <input class="form-control" type="text" name="size" placeholder="Enter the size of house">
+
+        </div>
+
+        <div class="abc" style="text-align: center">
+             <label><b>Select City:</b> </label><br>
+             <select class="selectpicker form-control" id="City" name="City" required="1">
+                  <option value="city">Enter City </option>
+                  {% for city in City %}
+                            <option value="{{ city}}">{{ city }}</option>
+                  {% endfor %}
+             </select>
+        </div>
+
+
+        <div class="abc" style="text-align: center">
+             <label><b>Select Furnishing Status:</b> </label><br>
+             <select class="selectpicker form-control" id="Furnishing Status" name="Furnishing Status" required="1">
+                  <option value="fs">Enter Furnishing Status </option>
+                 {% for furnish in Furnished %}
+                            <option value="{{ furnish}}">{{ furnish}}</option>
+                  {% endfor %}
+             </select>
+        </div>
+
+        <div class="abc" style="text-align: center">
+             <label><b>Select Tenant Preferred:</b> </label><br>
+             <select class="selectpicker form-control" id="Tenant Preferred" name="Tenant Preferred" required="1">
+                  <option value="tf">Enter Tenant Preferred </option>
+                 {% for tenant in Tenant %}
+                            <option value="{{ tenant}}">{{ tenant}}</option>
+                  {% endfor %}
+             </select>
+        </div>
+
+        <div class="abc" style="text-align: center">
+             <label><b>Select Number of Bathroom:</b> </label><br>
+             <select class="selectpicker form-control" id="Bathroom" name="Bathroom" required="1">
+                 <option value="tf">Enter number of Bathroom </option>
+
+                  {% for bath in Bathroom %}
+                            <option value="{{ bath}}">{{ bath}}</option>
+                  {% endfor %}
+             </select>
+        </div>
+        <br>
+
+        <div class="abc" style="text-align: center">
+        <button  class="btn btn-primary form-control" onclick="send_data()">Predict Rent</button>
+        </div>
+
+</form>
+    <br>
+
+    <div class="row">
+        <div class="col-12" style="text-align:center">
+            <h3><span id="prediction"></span></h3>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+     function form_handler(event) {
+        event.preventDefault(); // Don't submit the form normally
+    }
+
+    function send_data()
+    {
+        document.querySelector('form').addEventListener("submit",form_handler);
+
+        var fd=new FormData(document.querySelector('form'));
+
+        var xhr= new XMLHttpRequest({mozSystem: true});
+
+        xhr.open('POST','/predict',true);
+        document.getElementById('prediction').innerHTML="Wait! Predicting Price.....";
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == XMLHttpRequest.DONE){
+                document.getElementById('prediction').innerHTML="Prediction: ₹"+xhr.responseText;
+
+            }
+        };
+
+        xhr.onload= function(){};
+
+        xhr.send(fd);
+    }
+</script>
+
+</body>
+</html>
